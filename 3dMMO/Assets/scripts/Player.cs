@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
 
     public GameObject player;
     public CharacterController _controller;
+    public Weapon weapon;
     Camera _camera;
     Animator anim;
     Rigidbody rigid;
@@ -105,7 +106,6 @@ public class Player : MonoBehaviour
         int attacknum = -1;
         if (a1Down || a2Down || a3Down || a4Down)
         {
-            isAttack = false;
             if (a1Down)
                 attacknum = 1;
             if (a2Down)
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
                 attacknum = 3;
             if (a4Down)
                 attacknum = 4;
-
+            weapon.Use(attacknum);
             switch (attacknum)
             {
                 case 1:
@@ -130,12 +130,35 @@ public class Player : MonoBehaviour
                     anim.SetTrigger("doAttack" + attacknum);
                     break;
             }
+            isAttack = false;
             Invoke("AttackOut", 0.4f);
         }
     }
     void AttackOut()
     {
         isAttack = true;
+    }
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+    private void FixedUpdate()
+    {
+        FreezeRotation();
+    }
+    void Damege()
+    {
+
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("player"+other.name);
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject.name);
     }
 
 }
