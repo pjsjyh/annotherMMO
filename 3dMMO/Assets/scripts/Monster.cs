@@ -74,10 +74,10 @@ public class Monster : CharacterInfo
     {
         if (!isDead)
         {
-            Debug.Log("!");
             monsterattackArea.attackStart = true;
             monsterAnim.SetTrigger("doAttack1");
             isAttack = true;
+            
         }
     }
     IEnumerator damage()
@@ -103,7 +103,6 @@ public class Monster : CharacterInfo
             if (monInfo._hp <= 0)
                 monsterDead();
                 
-            //Debug.Log(other.gameObject.name);
         }
         
     }

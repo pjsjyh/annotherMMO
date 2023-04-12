@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : CharacterInfo
 {
     float vAxis;
     float hAxis;
@@ -24,14 +24,18 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDead;
 
+    
     public GameObject player;
     public CharacterController _controller;
     public Weapon weapon;
+    public ChaInfo playerInfo;
+
     Camera _camera;
     Animator anim;
     Rigidbody rigid;
     void Start()
     {
+        createPlayer();
         anim = player.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = player.GetComponent<CharacterController>();
@@ -46,11 +50,13 @@ public class Player : MonoBehaviour
         Jump();
         Turn();
         Attack();
+        CheckDie();
         if (_controller.isGrounded == false)
         {
             moveVec.y += gravity * Time.deltaTime;
         }
-        _controller.Move(moveVec * speed * Time.deltaTime);
+        if(!isDead)
+            _controller.Move(moveVec * speed * Time.deltaTime);
     }
 
     void GetInput()
@@ -67,6 +73,11 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        if (isDead)
+        {
+            moveVec = Vector3.zero;
+            return;
+        }
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
 
@@ -80,10 +91,10 @@ public class Player : MonoBehaviour
     {
 
         Vector3 dir = moveVec;
-        if (dir.x != 0 || dir.y != 0 || dir.z != 0)
+        if (dir.x != 0 || dir.y != 0 || dir.z != 0&&!isDead)
             player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * speed);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0)&&!isDead)
         {
             Vector3 playerRotate = Vector3.Scale(_camera.transform.forward, new Vector3(1, 0, 1));
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * 10f);
@@ -101,7 +112,7 @@ public class Player : MonoBehaviour
     }
     void Attack()
     {
-        if (!isAttack)
+        if (!isAttack|| isDead)
             return;
         int attacknum = -1;
         if (a1Down || a2Down || a3Down || a4Down)
@@ -134,6 +145,11 @@ public class Player : MonoBehaviour
             Invoke("AttackOut", 0.4f);
         }
     }
+    void CheckDie()
+    {
+        if (playerInfo._hp <= 0&& !isDead)
+            OnDie();
+    }
     void AttackOut()
     {
         isAttack = true;
@@ -146,19 +162,16 @@ public class Player : MonoBehaviour
     {
         FreezeRotation();
     }
-    void Damege()
+    void OnDie()
     {
-
+        anim.SetTrigger("doDie");
+        isDead = true;
     }
-
-    void OnTriggerEnter(Collider other)
+    void createPlayer()
     {
-        Debug.Log("player"+other.name);
-
+        playerInfo._hp = 20;
+        playerInfo._defence = 50;
+        playerInfo._attack = 10;
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.gameObject.name);
-    }
-
+    
 }

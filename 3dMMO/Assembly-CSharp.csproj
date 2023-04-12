@@ -59,10 +59,12 @@
     <Compile Include="Assets\Asset\GUI Kit  - Mono Round\Scripts\PanelControlMonoRound.cs" />
     <Compile Include="Assets\Asset\GUI Kit  - Mono Round\Scripts\PanelMonoRound.cs" />
     <Compile Include="Assets\scripts\CharacterInfo.cs" />
+    <Compile Include="Assets\scripts\GameManager.cs" />
     <Compile Include="Assets\scripts\Monster.cs" />
     <Compile Include="Assets\scripts\MonsterArea.cs" />
     <Compile Include="Assets\scripts\MouseMove.cs" />
     <Compile Include="Assets\scripts\Player.cs" />
+    <Compile Include="Assets\scripts\PlayerMove.cs" />
     <Compile Include="Assets\scripts\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>

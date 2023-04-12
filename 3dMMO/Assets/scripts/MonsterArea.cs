@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterArea : MonoBehaviour
+public class MonsterArea : Monster
 {
     // Start is called before the first frame update
     Collider colid;
@@ -16,29 +16,26 @@ public class MonsterArea : MonoBehaviour
         if (attackStart)
         {
             attackStart = false;
-            Debug.Log("공격켜짐");
+           // Debug.Log("공격켜짐");
             colid.enabled = true;
-            StartCoroutine("Attack");
+            Invoke("TurnOffAttack", 0.4f);
         }
     }
-    IEnumerable Attack()
+  
+    void TurnOffAttack()
     {
-        yield return new WaitForSeconds(1f);
         colid.enabled = false;
-        yield return new WaitForSeconds(1f);
-
     }
-    public void AttackStart()
-    {
-        Debug.Log("공격!");
-       // StartCoroutine("Attack");
-    }
+ 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("monster     " + other.gameObject.name);
-            //StartCoroutine("Attack");
+            //Debug.Log("monster     " + other.gameObject.name);
+            
+            Player player = other.GetComponentInParent<Player>();
+            player.playerInfo._hp -= 20;
+            colid.enabled = false;
         }
     }
 }
