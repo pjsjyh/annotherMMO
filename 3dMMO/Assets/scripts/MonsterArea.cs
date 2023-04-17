@@ -34,8 +34,15 @@ public class MonsterArea : Monster
             //Debug.Log("monster     " + other.gameObject.name);
             
             Player player = other.GetComponentInParent<Player>();
+            Animator playeranim = other.GetComponent<Animator>();
             player.playerInfo._hp -= 20;
+            StartCoroutine(getHit(playeranim));
             colid.enabled = false;
         }
+    }
+    IEnumerator getHit(Animator playeranim)
+    {
+        yield return new WaitForSeconds(0.2f);
+        playeranim.SetTrigger("doGetHit");
     }
 }

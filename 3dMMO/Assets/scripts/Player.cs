@@ -10,22 +10,22 @@ public class Player : CharacterInfo
     float gravity = -9.81f;
     Vector3 moveVec;
     public int _playerHP;
-
+    public int attacknum=-1;
 
 
     bool wDown;
     bool a1Down, a2Down, a3Down, a4Down;
     bool jDown;
 
-    bool isAttack = true;
+    public bool isAttack = true;
 
     bool isWalk;
     bool isRun;
-    bool isJump;
+    public bool isJump=false;
     bool isDead;
 
-    
-    public GameObject player;
+    [SerializeField]
+    private GameObject player;
     public CharacterController _controller;
     public Weapon weapon;
     public ChaInfo playerInfo;
@@ -33,13 +33,16 @@ public class Player : CharacterInfo
     Camera _camera;
     Animator anim;
     Rigidbody rigid;
+
+    playerSkill playerskilltimer;
     void Start()
     {
         createPlayer();
         anim = player.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = player.GetComponent<CharacterController>();
-        rigid = player.GetComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
+        playerskilltimer = GameObject.Find("SkillGroup").GetComponent<playerSkill>();
     }
 
 
@@ -47,11 +50,11 @@ public class Player : CharacterInfo
     {
         GetInput();
         Move();
-        Jump();
         Turn();
+        Jump();
         Attack();
         CheckDie();
-        if (_controller.isGrounded == false)
+        if (_controller.isGrounded == false&&!isJump)
         {
             moveVec.y += gravity * Time.deltaTime;
         }
@@ -102,30 +105,37 @@ public class Player : CharacterInfo
     }
     void Jump()
     {
-        if (jDown && !isJump && moveVec == Vector3.zero && !isDead)
+        if (jDown && !isJump && !isDead)
         {
-            moveVec.y = 7.0f;
+            moveVec.y = 10.0f;
             //rigid.AddForce(Vector3.up * 150, ForceMode.Impulse);
             anim.SetTrigger("doJump");
-            //isJump = true;
+            isJump = true;
         }
     }
     void Attack()
     {
         if (!isAttack|| isDead)
             return;
-        int attacknum = -1;
+        attacknum = -1;
         if (a1Down || a2Down || a3Down || a4Down)
         {
-            if (a1Down)
-                attacknum = 1;
-            if (a2Down)
-                attacknum = 2;
-            if (a3Down)
-                attacknum = 3;
-            if (a4Down)
+            if (playerskilltimer.canUseSkill)
+            {
+                if (a1Down)
+                    attacknum = 1;
+                if (a2Down)
+                    attacknum = 2;
+                if (a3Down)
+                    attacknum = 3;
+            }
+            
+            if (a4Down&&playerskilltimer.canUseSkill4)
                 attacknum = 4;
             weapon.Use(attacknum);
+            playerskilltimer.UseSkill(attacknum);
+
+            
             switch (attacknum)
             {
                 case 1:
@@ -169,7 +179,7 @@ public class Player : CharacterInfo
     }
     void createPlayer()
     {
-        playerInfo._hp = 20;
+        playerInfo._hp = 100;
         playerInfo._defence = 50;
         playerInfo._attack = 10;
     }

@@ -18,8 +18,10 @@ public class MouseMove : MonoBehaviour
     public float maxDistance;
     public float finalDistance;
     public float smoothness = 10f;
+    Player player;
     private void Start()
     {
+        player= GameObject.Find("Character").GetComponent<Player>();
         rotX = transform.localRotation.eulerAngles.x;
         rotY = transform.localRotation.eulerAngles.y;
 
@@ -47,7 +49,8 @@ public class MouseMove : MonoBehaviour
         {
             finalDistance = maxDistance;
         }
-        realCamera.localPosition = Vector3.Lerp(realCamera.localPosition, dirNormalized * finalDistance, Time.deltaTime*smoothness);
+        if(!player.isJump)
+            realCamera.localPosition = Vector3.Lerp(realCamera.localPosition, dirNormalized * finalDistance, Time.deltaTime*smoothness);
     }
     void cameramove()
     {
