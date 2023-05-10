@@ -7,6 +7,9 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    public static GameManager instance = null;
+
+
     public GameObject gamePanel;
     public Player player;
     public TextMeshProUGUI playerHealthText;
@@ -15,20 +18,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI playerCoinText;
     public RectTransform playerHealthBar;
     public RectTransform playerMpBar;
-    void Start()
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            if (instance != this)
+                Destroy(this.gameObject);
+        }
     }
 
     void LateUpdate()
     {
         playerHealthText.text = player.playerInfo._hp+" / "+"100";
+        playerCoinText.text = string.Format("{0:n0}", player.playerInfo._coin);
         if (player!=null)
         {
             if((float)player.playerInfo._hp / 100>=0)

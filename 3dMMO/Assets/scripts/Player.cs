@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : CharacterInfo
 {
@@ -10,7 +11,7 @@ public class Player : CharacterInfo
     float gravity = -9.81f;
     Vector3 moveVec;
     public int _playerHP;
-    public int attacknum=-1;
+    public int attacknum = -1;
 
 
     bool wDown;
@@ -21,8 +22,9 @@ public class Player : CharacterInfo
 
     bool isWalk;
     bool isRun;
-    public bool isJump=false;
+    public bool isJump = false;
     bool isDead;
+    bool skillclickEvent = false;
 
     [SerializeField]
     private GameObject player;
@@ -35,9 +37,13 @@ public class Player : CharacterInfo
     Rigidbody rigid;
 
     playerSkill playerskilltimer;
-    void Start()
+    private void Awake()
     {
         createPlayer();
+
+    }
+    void Start()
+    {
         anim = player.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = player.GetComponent<CharacterController>();
@@ -54,11 +60,11 @@ public class Player : CharacterInfo
         Jump();
         Attack();
         CheckDie();
-        if (_controller.isGrounded == false&&!isJump)
+        if (_controller.isGrounded == false && !isJump)
         {
             moveVec.y += gravity * Time.deltaTime;
         }
-        if(!isDead)
+        if (!isDead)
             _controller.Move(moveVec * speed * Time.deltaTime);
     }
 
@@ -94,10 +100,10 @@ public class Player : CharacterInfo
     {
 
         Vector3 dir = moveVec;
-        if (dir.x != 0 || dir.y != 0 || dir.z != 0&&!isDead)
+        if (dir.x != 0 || dir.y != 0 || dir.z != 0 && !isDead)
             player.transform.rotation = Quaternion.Slerp(player.transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * speed);
 
-        if (Input.GetMouseButton(0)&&!isDead)
+        if (Input.GetMouseButton(0) && !isDead)
         {
             Vector3 playerRotate = Vector3.Scale(_camera.transform.forward, new Vector3(1, 0, 1));
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * 10f);
@@ -115,27 +121,36 @@ public class Player : CharacterInfo
     }
     void Attack()
     {
-        if (!isAttack|| isDead)
+        if (!isAttack || isDead)
             return;
-        attacknum = -1;
-        if (a1Down || a2Down || a3Down || a4Down)
+        if (a1Down || a2Down || a3Down || a4Down || skillclickEvent)
         {
-            if (playerskilltimer.canUseSkill)
+            if (!skillclickEvent)
             {
-                if (a1Down)
-                    attacknum = 1;
-                if (a2Down)
-                    attacknum = 2;
-                if (a3Down)
-                    attacknum = 3;
+                if (playerskilltimer.canUseSkill)
+                {
+                    if (a1Down)
+                        attacknum = 1;
+                    if (a2Down)
+                        attacknum = 2;
+                    if (a3Down)
+                        attacknum = 3;
+                }
+
+                if (a4Down && playerskilltimer.canUseSkill4)
+                    attacknum = 4;
+            }
+            else
+            {
+                if (attacknum != 4 && playerskilltimer.canUseSkill == false)
+                    return;
+                if (attacknum == 4 && playerskilltimer.canUseSkill4 == false)
+                    return;
             }
             
-            if (a4Down&&playerskilltimer.canUseSkill4)
-                attacknum = 4;
             weapon.Use(attacknum);
             playerskilltimer.UseSkill(attacknum);
 
-            
             switch (attacknum)
             {
                 case 1:
@@ -151,8 +166,21 @@ public class Player : CharacterInfo
                     anim.SetTrigger("doAttack" + attacknum);
                     break;
             }
+            //AttackAnim(attacknum);
+
             isAttack = false;
             Invoke("AttackOut", 0.4f);
+        }
+        skillclickEvent = false;
+        attacknum = -1;
+    }
+    public void ClickSkillBtn(int atk)
+    {
+        GameObject clickobj = EventSystem.current.currentSelectedGameObject;
+        if (clickobj != null)
+        {
+            skillclickEvent = true;
+            attacknum = atk;
         }
     }
     void CheckDie()
@@ -182,6 +210,7 @@ public class Player : CharacterInfo
         playerInfo._hp = 100;
         playerInfo._defence = 50;
         playerInfo._attack = 10;
+        playerInfo._coin = 100;
     }
     
 }

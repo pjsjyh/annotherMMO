@@ -66,8 +66,8 @@ public class playerSkill : MonoBehaviour
                 skill4cool = false;
             }
         }
-
     }
+  
     void SkillCool(int attacknum)
     {
         switch (attacknum)
@@ -222,4 +222,5 @@ public class playerSkill : MonoBehaviour
 
         yield break;
     }
+   
 }
