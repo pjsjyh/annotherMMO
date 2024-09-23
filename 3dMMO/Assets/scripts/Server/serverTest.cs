@@ -6,6 +6,8 @@ using ApiUtilities;
 public class serverTest : MonoBehaviour
 {
     public TMP_InputField idInputField; // TextMeshPro의 TMP_InputField 사용
+    public TMP_InputField usernameInputField; // TextMeshPro의 TMP_InputField 사용
+
     public TMP_InputField passwordInputField; // TextMeshPro의 TMP_InputField 사용
     //private string url = "http://localhost:8080/set"; // Go 서버 URL
 
@@ -14,20 +16,22 @@ public class serverTest : MonoBehaviour
     {
         string id = idInputField.text;
         string password = passwordInputField.text;
+        string username = usernameInputField.text;
         Debug.Log($"ID: {id}, Password: {password}");
 
         // 코루틴을 통해 서버에 POST 요청을 보냄
-        StartCoroutine(RegisterNewAccount(id, password));
+        StartCoroutine(RegisterNewAccount(id, password, username));
     }
 
     // 서버에 POST 요청을 보내는 코루틴
-    IEnumerator RegisterNewAccount(string id, string password)
+    IEnumerator RegisterNewAccount(string id, string password, string username)
     {
         WWWForm form = new WWWForm();
         form.AddField("id", id);
         form.AddField("password", password);
-        UnityWebRequest www = UnityWebRequest.Post(ApiUrls.LoginUrl, form);
-        Debug.Log(ApiUrls.LoginUrl);
+        form.AddField("username", username);
+        UnityWebRequest www = UnityWebRequest.Post(ApiUrls.RegisterUrl, form);
+        Debug.Log(ApiUrls.RegisterUrl);
         Debug.Log(www);
         yield return www.SendWebRequest();
 
@@ -40,5 +44,15 @@ public class serverTest : MonoBehaviour
             // 서버 응답 출력 (예: 성공 메시지)
             Debug.Log("Response: " + www.downloadHandler.text);
         }
+        // if (www.result == UnityWebRequest.Result.Success)
+        // {
+        //     // 서버로부터 토큰을 받아 저장
+        //     string token = www.downloadHandler.text;
+        //     PlayerPrefs.SetString("authToken", token);
+        // }
+        // else
+        // {
+        //     Debug.LogError("Login failed: " + www.error);
+        // }
     }
 }
