@@ -22,16 +22,17 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// 비밀번호 해시 처리 후 DB에 저장
+	// 비밀번호 해시 처리 후 DB에 저장 mysql ver
 	// _, err := db.DB.Exec("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", id, password, email)
 	// if err != nil {
 	// 	c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to register"})
 	// 	return
 	// }
 
-	// 비밀번호 해시 처리 후 DB에 저장
-	_, err := db.DB.Exec("INSERT INTO users (id, userid, username, userpassword) VALUES ($1, $2, $3)", userUUID, id, username, password)
+	// 비밀번호 해시 처리 후 DB에 저장 postgres
+	_, err := db.DB.Exec("INSERT INTO auth (id, userid, username, userpassword) VALUES ($1, $2, $3, $4)", userUUID, id, username, password)
 	if err != nil {
+		fmt.Println("value: 연결끊김")
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to register"})
 		return
 	}

@@ -3,7 +3,6 @@ package main
 import (
 	"Server/db"
 	"Server/handlers"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +12,8 @@ func main() {
 
 	// 데이터베이스 초기화
 	db.InitDB()
-	fmt.Printf("DB address in main: %p\n", db.DB)
+	// fmt.Printf("DB address in main: %p\n", db.DB)
 
-	fmt.Println(db.DB)
 	// 라우트 설정
 	r.POST("/register", handlers.Register)
 	r.POST("/login", handlers.Login)
