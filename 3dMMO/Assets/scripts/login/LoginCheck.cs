@@ -12,32 +12,43 @@ public class LoginCheck : MonoBehaviour
     public TMP_InputField passwordInputField; // TextMeshPro의 TMP_InputField 사용
     public TextMeshProUGUI createAccountText;
     public TextMeshProUGUI loginBtnText;
+    public TextMeshProUGUI signupBtnText;
     public TextMeshProUGUI duplicateErrorText;
+    public GameObject createAccountSuccesPanel;
+    public FadeInOutController fadeController;
     private Auth authManager;
 
-    private void Start()
+    private void Awake()
     {
         authManager = new Auth(); // Auth 클래스의 인스턴스를 생성
     }
-    public void signAccount()
+    public async void signAccount()
     {
+        duplicateErrorText.gameObject.SetActive(false);
         if (isLogin)
         {
-            duplicateErrorText.gameObject.SetActive(false);
             string id = idInputField.text;
             string password = passwordInputField.text;
-            authManager.GoLoginAccount(id, password);
-
+            bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
+            if (isSuccess)
+            {
+                startFade();
+            }
         }
         else
         {
+
             if (fieldFull())
             {
-                duplicateErrorText.gameObject.SetActive(false);
+
                 string id = idInputField.text;
                 string password = passwordInputField.text;
                 string username = usernameInputField.text;
-                authManager.CreateAccount(id, password, username, duplicateErrorText);
+                bool isSuccess = await authManager.CreateAccount(id, password, username, duplicateErrorText);
+                if (isSuccess)
+                {
+                    createAccountSuccesPanel.SetActive(true);
+                }
             }
             else
             {
@@ -67,7 +78,7 @@ public class LoginCheck : MonoBehaviour
             createAccountText.gameObject.SetActive(true);
             usernameInputField.gameObject.SetActive(true);
             loginBtnText.text = "create Account";
-
+            signupBtnText.text = "BACK";
             isLogin = false;
         }
         else
@@ -75,7 +86,24 @@ public class LoginCheck : MonoBehaviour
             createAccountText.gameObject.SetActive(false);
             usernameInputField.gameObject.SetActive(false);
             loginBtnText.text = "login";
+            signupBtnText.text = "SIGN UP";
             isLogin = true;
         }
+    }
+    public void startFade()
+    {
+        StartCoroutine(DelayedFadeInOut());
+    }
+    IEnumerator DelayedFadeInOut()
+    {
+        StartCoroutine(fadeController.FadeIn(2.0f));
+        yield return new WaitForSeconds(3.5f);
+        StartCoroutine(fadeController.FadeOut(2.0f));
+
+
+    }
+    public void turnOffcreateAccountSuccesPanel()
+    {
+        createAccountSuccesPanel.SetActive(false);
     }
 }
