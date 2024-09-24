@@ -27,6 +27,18 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+	// 1-1. DB에서 중복 Username 확인
+	var existingNAME string
+	err = db.DB.QueryRow("SELECT username FROM auth WHERE username = $1", username).Scan(&existingNAME)
+	if err == nil {
+		// 이미 해당 id가 존재하는 경우
+		c.JSON(http.StatusConflict, gin.H{"status": "error",
+			"message":    "Username already exists",
+			"error_type": "duplicate_username",
+			// 구체적인 오류 타입 추가
+		})
+		return
+	}
 
 	// 2. 비밀번호 해시 처리
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

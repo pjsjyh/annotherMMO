@@ -12,22 +12,38 @@ public class LoginCheck : MonoBehaviour
     public TMP_InputField passwordInputField; // TextMeshPro의 TMP_InputField 사용
     public TextMeshProUGUI createAccountText;
     public TextMeshProUGUI loginBtnText;
+    public TextMeshProUGUI duplicateErrorText;
     private Auth authManager;
 
+    private void Start()
+    {
+        authManager = new Auth(); // Auth 클래스의 인스턴스를 생성
+    }
     public void signAccount()
     {
         if (isLogin)
         {
+            duplicateErrorText.gameObject.SetActive(false);
+            string id = idInputField.text;
+            string password = passwordInputField.text;
+            authManager.GoLoginAccount(id, password);
 
         }
         else
         {
-            if (fieldFull() && authManager != null)
+            if (fieldFull())
             {
+                duplicateErrorText.gameObject.SetActive(false);
                 string id = idInputField.text;
                 string password = passwordInputField.text;
                 string username = usernameInputField.text;
-                authManager.CreateAccount(id, password, username);
+                authManager.CreateAccount(id, password, username, duplicateErrorText);
+            }
+            else
+            {
+                duplicateErrorText.gameObject.SetActive(true);
+                duplicateErrorText.text = "Please fill in the blanks";
+                Debug.Log("ID: " + idInputField.text + ", Username: " + usernameInputField.text + ", Password: " + passwordInputField.text);
             }
         }
 
