@@ -38,7 +38,6 @@
   <ItemGroup>
      <Compile Include="Assets\Asset\GUI Kit  - Mono Round\Scripts\PanelControlMonoRound.cs" />
      <Compile Include="Assets\Asset\GUI Kit  - Mono Round\Scripts\PanelMonoRound.cs" />
-     <Compile Include="Assets\scripts\FadeInOutController.cs" />
      <Compile Include="Assets\scripts\GameComponent\CharacterInfo.cs" />
      <Compile Include="Assets\scripts\GameComponent\Monster.cs" />
      <Compile Include="Assets\scripts\GameComponent\MonsterArea.cs" />
@@ -49,6 +48,7 @@
      <Compile Include="Assets\scripts\GameComponent\Weapon.cs" />
      <Compile Include="Assets\scripts\GameComponent\playerSkill.cs" />
      <Compile Include="Assets\scripts\GameManager.cs" />
+     <Compile Include="Assets\scripts\SceneTransManager.cs" />
      <Compile Include="Assets\scripts\Server\ApiUtilities.cs" />
      <Compile Include="Assets\scripts\Server\AuthManager.cs" />
      <Compile Include="Assets\scripts\login\CreateAccount.cs" />
@@ -637,6 +637,15 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
         <HintPath>/home/soyeon/linuxcom/linuxcom/3dMMO/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Sysroot.Linux_x86_64">
+        <HintPath>/home/soyeon/linuxcom/linuxcom/3dMMO/Library/ScriptAssemblies/Unity.Sysroot.Linux_x86_64.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Toolchain.Linux-x86_64">
+        <HintPath>/home/soyeon/linuxcom/linuxcom/3dMMO/Library/ScriptAssemblies/Unity.Toolchain.Linux-x86_64.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.SysrootPackage.Editor">
+        <HintPath>/home/soyeon/linuxcom/linuxcom/3dMMO/Library/ScriptAssemblies/Unity.SysrootPackage.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

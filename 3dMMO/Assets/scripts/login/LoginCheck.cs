@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro; // TextMeshPro 네임스페이스 추가
 using AuthManager;
+using UnityEngine.SceneManagement;
 public class LoginCheck : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -15,7 +16,6 @@ public class LoginCheck : MonoBehaviour
     public TextMeshProUGUI signupBtnText;
     public TextMeshProUGUI duplicateErrorText;
     public GameObject createAccountSuccesPanel;
-    public FadeInOutController fadeController;
     private Auth authManager;
 
     private void Awake()
@@ -32,7 +32,7 @@ public class LoginCheck : MonoBehaviour
             bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
             if (isSuccess)
             {
-                startFade();
+                SceneTransManager.Instance.FadeAndLoadScene("GameScene");
             }
         }
         else
@@ -61,14 +61,9 @@ public class LoginCheck : MonoBehaviour
     }
     public bool fieldFull()
     {
-        if (idInputField.text != null && usernameInputField.text != null && passwordInputField.text != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return !string.IsNullOrEmpty(idInputField.text) &&
+               !string.IsNullOrEmpty(usernameInputField.text) &&
+               !string.IsNullOrEmpty(passwordInputField.text);
     }
 
     public void changeMode()
@@ -89,18 +84,6 @@ public class LoginCheck : MonoBehaviour
             signupBtnText.text = "SIGN UP";
             isLogin = true;
         }
-    }
-    public void startFade()
-    {
-        StartCoroutine(DelayedFadeInOut());
-    }
-    IEnumerator DelayedFadeInOut()
-    {
-        StartCoroutine(fadeController.FadeIn(2.0f));
-        yield return new WaitForSeconds(3.5f);
-        StartCoroutine(fadeController.FadeOut(2.0f));
-
-
     }
     public void turnOffcreateAccountSuccesPanel()
     {
