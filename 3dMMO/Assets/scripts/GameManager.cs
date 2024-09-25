@@ -7,7 +7,8 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public static GameManager instance = null;
+    // 싱글톤 인스턴스
+    public static GameManager Instance { get; private set; }
 
 
     public GameObject gamePanel;
@@ -20,28 +21,28 @@ public class GameManager : MonoBehaviour
     public RectTransform playerMpBar;
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            if (instance != this)
+            if (Instance != this)
                 Destroy(this.gameObject);
         }
     }
 
     void LateUpdate()
     {
-        playerHealthText.text = player.playerInfo._hp+" / "+"100";
+        playerHealthText.text = player.playerInfo._hp + " / " + "100";
         playerCoinText.text = string.Format("{0:n0}", player.playerInfo._coin);
-        if (player!=null)
+        if (player != null)
         {
-            if((float)player.playerInfo._hp / 100>=0)
+            if ((float)player.playerInfo._hp / 100 >= 0)
                 playerHealthBar.localScale = new Vector3((float)player.playerInfo._hp / 100, 1, 1);
         }
-        
+
     }
 
 }

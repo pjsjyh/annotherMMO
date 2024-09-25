@@ -12,6 +12,7 @@ public class Player : CharacterInfo
     Vector3 moveVec;
     public int _playerHP;
     public int attacknum = -1;
+    float jumpSpeed;
 
 
     bool wDown;
@@ -60,10 +61,10 @@ public class Player : CharacterInfo
         Jump();
         Attack();
         CheckDie();
-        if (_controller.isGrounded == false && !isJump)
-        {
-            moveVec.y += gravity * Time.deltaTime;
-        }
+        // if (_controller.isGrounded == false && !isJump)
+        // {
+        //     moveVec.y += gravity * Time.deltaTime;
+        // }
         if (!isDead)
             _controller.Move(moveVec * speed * Time.deltaTime);
     }
@@ -113,11 +114,23 @@ public class Player : CharacterInfo
     {
         if (jDown && !isJump && !isDead)
         {
-            moveVec.y = 10.0f;
-            //rigid.AddForce(Vector3.up * 150, ForceMode.Impulse);
+            jumpSpeed = 3f;  // 점프 힘을 설정
             anim.SetTrigger("doJump");
             isJump = true;
         }
+
+        // 중력 적용
+        if (!_controller.isGrounded)
+        {
+            jumpSpeed += gravity * Time.deltaTime;  // 중력을 점진적으로 더해줌
+        }
+        else if (_controller.isGrounded && jumpSpeed < 0)
+        {
+            jumpSpeed = 0;  // 착지 시 속도를 0으로
+            isJump = false;     // 착지 상태로 전환
+        }
+
+        moveVec.y = jumpSpeed;  // 부드러운 점프
     }
     void Attack()
     {
@@ -147,7 +160,7 @@ public class Player : CharacterInfo
                 if (attacknum == 4 && playerskilltimer.canUseSkill4 == false)
                     return;
             }
-            
+
             weapon.Use(attacknum);
             playerskilltimer.UseSkill(attacknum);
 
@@ -185,7 +198,7 @@ public class Player : CharacterInfo
     }
     void CheckDie()
     {
-        if (playerInfo._hp <= 0&& !isDead)
+        if (playerInfo._hp <= 0 && !isDead)
             OnDie();
     }
     void AttackOut()
@@ -212,5 +225,5 @@ public class Player : CharacterInfo
         playerInfo._attack = 10;
         playerInfo._coin = 100;
     }
-    
+
 }
