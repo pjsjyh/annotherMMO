@@ -32,7 +32,7 @@ public class LoginCheck : MonoBehaviour
             bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
             if (isSuccess)
             {
-                SceneTransManager.Instance.FadeAndLoadScene("GameScene");
+                sceneChange();
             }
         }
         else
@@ -84,6 +84,10 @@ public class LoginCheck : MonoBehaviour
             signupBtnText.text = "SIGN UP";
             isLogin = true;
         }
+    }
+    public void sceneChange()
+    {
+        SceneTransManager.Instance.FadeAndLoadScene("GameScene");
     }
     public void turnOffcreateAccountSuccesPanel()
     {
