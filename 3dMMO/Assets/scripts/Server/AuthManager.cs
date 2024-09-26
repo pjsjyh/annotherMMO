@@ -7,8 +7,32 @@ using System.Threading.Tasks;
 using System.Collections.Generic; //dictionary
 using Newtonsoft.Json;
 using ApiUtilities;
+using CharacterInfo;
 namespace AuthManager
 {
+    public class PlayerInfo
+    {
+        public string ID { get; set; }
+        public CharacterInfo character { get; set; }
+        public SkillInfo skill { get; set; }
+        public string AuthID { get; set; }
+        public string Username { get; set; }
+    }
+    public class CharacterInfo
+    {
+        public int level { get; set; }
+        public int HP { get; set; }
+        public int MP { get; set; }
+        public int Money { get; set; }
+    }
+
+    public class SkillInfo
+    {
+        public int Attack1 { get; set; }
+        public int Attack2 { get; set; }
+        public int Attack3 { get; set; }
+        public int Attack4 { get; set; }
+    }
     public class Auth
     {
         public LoginCheck loginCheckManager;
@@ -16,7 +40,6 @@ namespace AuthManager
         // 계정 생성 버튼 클릭 시 호출
         public async Task<bool> CreateAccount(string id, string password, string username, TextMeshProUGUI duplicateErrorText)
         {
-            Debug.Log($"ID: {id}, Password: {password}, Username: {username}");
             bool isSuccess = await RegisterNewAccount(id, password, username, duplicateErrorText);
             return isSuccess;
         }
@@ -77,7 +100,18 @@ namespace AuthManager
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
+                    var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBody);
+
                     Debug.Log("Response: " + responseBody);
+                    var playerInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse["playerinfo"].ToString());
+
+                    var characterJson = playerInfo["character"].ToString();
+
+                    // 다시 JSON으로 파싱
+                    ChaInfo characterData = JsonConvert.DeserializeObject<ChaInfo>(characterJson);
+
+                    CharacterManager.Instance.InitializePlayer(characterData);
+                    //InitializePlayer(jsonResponse["playerinfo"]);
                     return true;
                 }
             }
@@ -102,27 +136,6 @@ namespace AuthManager
                 HttpResponseMessage response = await client.PostAsync(ApiUrls.LoginUrl, content);
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) // 401 Unauthorized 처리
                 {
-                    // string responseBody = await response.Content.ReadAsStringAsync();
-                    // var errorResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
-                    // foreach (var kvp in errorResponse)
-                    // {
-                    //     Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
-                    // }
-                    // Debug.Log(errorResponse);
-
-                    // // 키가 존재하는지 먼저 확인한 후 접근
-                    // if (errorResponse.ContainsKey("error_type"))
-                    // {
-                    //     if (errorResponse["error_type"] == "duplicate_id")
-                    //     {
-                    //         Debug.LogError("Error: ID already exists.");
-                    //     }
-                    // }
-                    // else
-                    // {
-                    //     Debug.LogError("Unknown error: No error_type found.");
-
-                    // }
                     duplicateErrorText.gameObject.SetActive(true);
                     duplicateErrorText.text = "failed login";
                     return false;
@@ -132,6 +145,8 @@ namespace AuthManager
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log("Response: 로그인 성공" + responseBody);
+
+
                     return true;
                 }
             }

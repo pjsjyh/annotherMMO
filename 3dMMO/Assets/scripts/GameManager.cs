@@ -26,8 +26,6 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            InitializePlayer();
         }
         else
         {
@@ -39,19 +37,13 @@ public class GameManager : MonoBehaviour
     void LateUpdate()
     {
         playerHealthText.text = CharacterManager.Instance.myCharacter._hp + " / " + "100";
-        playerCoinText.text = string.Format("{0:n0}", CharacterManager.Instance.myCharacter._coin);
+        playerCoinText.text = string.Format("{0:n0}", CharacterManager.Instance.myCharacter._money);
         if (player != null)
         {
             if ((float)CharacterManager.Instance.myCharacter._hp / 100 >= 0)
                 playerHealthBar.localScale = new Vector3((float)CharacterManager.Instance.myCharacter._hp / 100, 1, 1);
         }
 
-    }
-    void InitializePlayer()
-    {
-        // 캐릭터 매니저 인스턴스에 접근해 플레이어 정보 초기화
-        CharacterManager.Instance.myCharacter._hp = 100;
-        CharacterManager.Instance.myCharacter._coin = 50;
     }
 
 }

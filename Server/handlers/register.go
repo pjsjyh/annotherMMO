@@ -2,13 +2,27 @@ package handlers
 
 import (
 	"Server/db"
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type CharacterInfo struct {
+	Level int `json:"_level"`
+	HP    int `json:"_hp"`
+	MP    int `json:"_mp"`
+	Money int `json:"_money"`
+}
+type SkillInfo struct {
+	Attack1 int `json:"_attack1"`
+	Attack2 int `json:"_attack2"`
+	Attack3 int `json:"_attack3"`
+	Attack4 int `json:"_attack4"`
+}
 
 func Register(c *gin.Context) {
 	id := c.PostForm("id")
@@ -51,19 +65,38 @@ func Register(c *gin.Context) {
 	userUUID := uuid.New().String()
 	//fmt.Println("value: ", id, hashedPassword, username)
 	if db.DB == nil {
-		fmt.Println("value: 연결끊김")
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Database not initialized"})
 		return
 	}
 	// 비밀번호 해시 처리 후 DB에 저장 postgres
 	_, err = db.DB.Exec("INSERT INTO auth (id, userid, username, userpassword) VALUES ($1, $2, $3, $4)", userUUID, id, username, hashedPassword)
 	if err != nil {
-		fmt.Println("value: 연결끊김")
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to register"})
 		return
 	}
-
+	//캐릭터 정보 생성
+	createPlayerInfoInDB(userUUID)
+	var getplayerinfo GetPlayerInfo = GetCharacterInfo(userUUID, username)
 	// 성공적으로 저장되었을 때
-	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Registration successful"})
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Registration successful", "playerinfo": getplayerinfo})
 
+}
+
+func createPlayerInfoInDB(userUUID string) {
+	characterinfo := CharacterInfo{Level: 1, HP: 100, MP: 100, Money: 0}
+	skillinfo := SkillInfo{Attack1: 0, Attack2: 0, Attack3: 0, Attack4: 0}
+
+	characterInfojsonData, err := json.Marshal(characterinfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	skillinfojsonData, err := json.Marshal(skillinfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	chaUUID := uuid.New().String()
+	_, err = db.DB.Exec("INSERT INTO playerinfo (id, character, skill, auth_id) VALUES ($1, $2, $3, $4)", chaUUID, characterInfojsonData, skillinfojsonData, userUUID)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

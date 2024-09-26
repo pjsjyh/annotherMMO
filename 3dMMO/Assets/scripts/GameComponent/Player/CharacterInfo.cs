@@ -7,9 +7,16 @@ namespace CharacterInfo
     public struct ChaInfo
     {
         public int _hp;
-        public int _coin;
-        public int _attack;
-        public int _defence;
+        public int _mp;
+        public int _money;
+        public int _level;
+    };
+    public struct SkillInfo
+    {
+        public int _attack1;
+        public int _attack2;
+        public int _attack3;
+        public int _attack4;
     };
 
     public class CharacterManager
@@ -32,5 +39,15 @@ namespace CharacterInfo
                 return instance;
             }
         }
+        public void InitializePlayer(ChaInfo playerInfo)
+        {
+            myCharacter._hp = playerInfo._hp;
+            myCharacter._mp = playerInfo._mp;
+            myCharacter._money = playerInfo._money;
+            myCharacter._level = playerInfo._level;
+
+        }
     }
+
+
 }
