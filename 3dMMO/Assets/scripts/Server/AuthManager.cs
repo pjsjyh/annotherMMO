@@ -10,29 +10,6 @@ using ApiUtilities;
 using CharacterInfo;
 namespace AuthManager
 {
-    public class PlayerInfo
-    {
-        public string ID { get; set; }
-        public CharacterInfo character { get; set; }
-        public SkillInfo skill { get; set; }
-        public string AuthID { get; set; }
-        public string Username { get; set; }
-    }
-    public class CharacterInfo
-    {
-        public int level { get; set; }
-        public int HP { get; set; }
-        public int MP { get; set; }
-        public int Money { get; set; }
-    }
-
-    public class SkillInfo
-    {
-        public int Attack1 { get; set; }
-        public int Attack2 { get; set; }
-        public int Attack3 { get; set; }
-        public int Attack4 { get; set; }
-    }
     public class Auth
     {
         public LoginCheck loginCheckManager;
@@ -100,17 +77,7 @@ namespace AuthManager
                 {
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
-                    var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBody);
-
-                    Debug.Log("Response: " + responseBody);
-                    var playerInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse["playerinfo"].ToString());
-
-                    var characterJson = playerInfo["character"].ToString();
-
-                    // 다시 JSON으로 파싱
-                    ChaInfo characterData = JsonConvert.DeserializeObject<ChaInfo>(characterJson);
-
-                    CharacterManager.Instance.InitializePlayer(characterData);
+                    await SettingAccount(responseBody);
                     //InitializePlayer(jsonResponse["playerinfo"]);
                     return true;
                 }
@@ -145,7 +112,7 @@ namespace AuthManager
                     response.EnsureSuccessStatusCode();
                     string responseBody = await response.Content.ReadAsStringAsync();
                     Debug.Log("Response: 로그인 성공" + responseBody);
-
+                    await SettingAccount(responseBody);
 
                     return true;
                 }
@@ -155,6 +122,22 @@ namespace AuthManager
                 Debug.LogError($"Request error: {e.Message}");
                 return false;
             }
+        }
+        private async Task SettingAccount(string responseBody)
+        {
+            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBody);
+
+            //Debug.Log("Response: " + responseBody);
+            var playerInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonResponse["playerinfo"].ToString());
+
+            var characterJson = playerInfo["character"].ToString();
+
+            // 다시 JSON으로 파싱
+            ChaInfo characterData = JsonConvert.DeserializeObject<ChaInfo>(characterJson);
+
+            CharacterManager.Instance.InitializePlayer(characterData);
+
+            return;
         }
     }
 }
