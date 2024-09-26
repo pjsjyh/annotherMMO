@@ -7088,6 +7088,7 @@ MonoBehaviour:
   playerMpText: {fileID: 0}
   playerLevelText: {fileID: 8893764497133016236}
   playerCoinText: {fileID: 9094579287942391442}
+  playerNameText: {fileID: 8893764496188886537}
   playerHealthBar: {fileID: 5168391951076508524}
   playerMpBar: {fileID: 5168463932314394033}
 --- !u!4 &1216017642

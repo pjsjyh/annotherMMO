@@ -135,7 +135,13 @@ namespace AuthManager
             // 다시 JSON으로 파싱
             ChaInfo characterData = JsonConvert.DeserializeObject<ChaInfo>(characterJson);
 
-            CharacterManager.Instance.InitializePlayer(characterData);
+
+            var playerName = playerInfo["Username"].ToString();
+
+            CharacterManager.Instance.InitializePlayer(characterData, playerName);
+
+
+
 
             return;
         }

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI playerMpText;
     public TextMeshProUGUI playerLevelText;
     public TextMeshProUGUI playerCoinText;
+    public TextMeshProUGUI playerNameText;
     public RectTransform playerHealthBar;
     public RectTransform playerMpBar;
     private void Awake()
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
     void LateUpdate()
     {
         playerHealthText.text = CharacterManager.Instance.myCharacter._hp + " / " + "100";
+        playerLevelText.text = CharacterManager.Instance.myCharacter._level.ToString();
+        playerNameText.text = CharacterManager.Instance._username;
         playerCoinText.text = string.Format("{0:n0}", CharacterManager.Instance.myCharacter._money);
         if (player != null)
         {

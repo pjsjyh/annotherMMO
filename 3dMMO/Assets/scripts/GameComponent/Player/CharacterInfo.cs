@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CharacterInfo
 {
+
     public struct ChaInfo
     {
         public int _hp;
@@ -23,7 +24,7 @@ namespace CharacterInfo
     {
         private static CharacterManager instance;
         public ChaInfo myCharacter;
-
+        public string _username;
         // private 생성자: 외부에서 인스턴스 생성 불가능
         private CharacterManager() { }
 
@@ -39,13 +40,13 @@ namespace CharacterInfo
                 return instance;
             }
         }
-        public void InitializePlayer(ChaInfo playerInfo)
+        public void InitializePlayer(ChaInfo playerInfo, string username)
         {
             myCharacter._hp = playerInfo._hp;
             myCharacter._mp = playerInfo._mp;
             myCharacter._money = playerInfo._money;
             myCharacter._level = playerInfo._level;
-
+            _username = username;
         }
     }
 
