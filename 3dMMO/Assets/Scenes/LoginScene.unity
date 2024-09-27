@@ -301,6 +301,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5404803830254820950, guid: caf5add109aecee1d93cfa4d7f2f3909,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 129.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5404803830413777977, guid: caf5add109aecee1d93cfa4d7f2f3909,
         type: 3}
       propertyPath: fadeController

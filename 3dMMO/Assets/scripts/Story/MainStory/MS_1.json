@@ -1,0 +1,34 @@
+{
+    "story": [
+        {
+            "sceneName": "MainFirst",
+            "dialogues": [
+                {
+                    "name": "James",
+                    "dialogue": "Welcome, warrior."
+                },
+                {
+                    "name": "James",
+                    "dialogue": "I really hope you save the princess."
+                },
+                {
+                    "name": "James",
+                    "dialogue": "Before that, take a look around the village."
+                }
+            ]
+        },
+        {
+            "sceneName": "Quest1",
+            "dialogues": [
+                {
+                    "name": "Quest Master",
+                    "dialogue": "Your first task is ahead."
+                },
+                {
+                    "name": "Player",
+                    "dialogue": "I'm ready!"
+                }
+            ]
+        }
+    ]
+}
