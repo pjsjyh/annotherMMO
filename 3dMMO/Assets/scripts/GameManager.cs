@@ -34,9 +34,25 @@ public class GameManager : MonoBehaviour
                 Destroy(this.gameObject);
         }
     }
+    private void Start()
+    {
+        if (CharacterManager.Instance._username == "")
+        {
+            ChaInfo managerInfo = new ChaInfo
+            {
+                _hp = 100,
+                _mp = 100,
+                _money = 999999,
+                _level = 99999
+            };
+
+            CharacterManager.Instance.InitializePlayer(managerInfo, "manager");
+        }
+    }
 
     void LateUpdate()
     {
+
         playerHealthText.text = CharacterManager.Instance.myCharacter._hp + " / " + "100";
         playerLevelText.text = CharacterManager.Instance.myCharacter._level.ToString();
         playerNameText.text = CharacterManager.Instance._username;

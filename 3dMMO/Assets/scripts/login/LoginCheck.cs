@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro; // TextMeshPro 네임스페이스 추가
 using AuthManager;
 using UnityEngine.SceneManagement;
+using CharacterInfo;
 public class LoginCheck : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -29,11 +30,28 @@ public class LoginCheck : MonoBehaviour
         {
             string id = idInputField.text;
             string password = passwordInputField.text;
-            bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
-            if (isSuccess)
+            if (id == "manager")
             {
+                ChaInfo managerInfo = new ChaInfo
+                {
+                    _hp = 100,
+                    _mp = 100,
+                    _money = 999999,
+                    _level = 99999
+                };
+
+                CharacterManager.Instance.InitializePlayer(managerInfo, "manager");
                 sceneChange();
             }
+            else
+            {
+                bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
+                if (isSuccess)
+                {
+                    sceneChange();
+                }
+            }
+
         }
         else
         {

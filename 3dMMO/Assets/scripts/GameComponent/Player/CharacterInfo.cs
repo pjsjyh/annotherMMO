@@ -24,7 +24,7 @@ namespace CharacterInfo
     {
         private static CharacterManager instance;
         public ChaInfo myCharacter;
-        public string _username;
+        public string _username = "";
         // private 생성자: 외부에서 인스턴스 생성 불가능
         private CharacterManager() { }
 
