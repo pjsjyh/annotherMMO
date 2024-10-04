@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     float vAxis;
     float hAxis;
-    float speed = 10;
+    float speed = 7;
     float gravity = -9.81f;
     Vector3 moveVec;
     public int _playerHP;
