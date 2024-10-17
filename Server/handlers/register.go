@@ -3,6 +3,7 @@ package handlers
 import (
 	"Server/db"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -31,7 +32,7 @@ func Register(c *gin.Context) {
 
 	// 1. DB에서 중복 ID 확인
 	var existingID string
-	err := db.DB.QueryRow("SELECT userid FROM auth WHERE userid = $1", id).Scan(&existingID)
+	err := db.DB.QueryRow("SELECT player_id FROM auth WHERE player_id = $1", id).Scan(&existingID)
 	if err == nil {
 		// 이미 해당 id가 존재하는 경우
 		c.JSON(http.StatusConflict, gin.H{"status": "error",
@@ -62,27 +63,27 @@ func Register(c *gin.Context) {
 	}
 
 	// 3. DB에 저장
-	userUUID := uuid.New().String()
 	//fmt.Println("value: ", id, hashedPassword, username)
 	if db.DB == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Database not initialized"})
 		return
 	}
 	// 비밀번호 해시 처리 후 DB에 저장 postgres
-	_, err = db.DB.Exec("INSERT INTO auth (id, userid, username, userpassword) VALUES ($1, $2, $3, $4)", userUUID, id, username, hashedPassword)
+	_, err = db.DB.Exec("INSERT INTO auth (player_id, username, password, status) VALUES ($1, $2, $3, $4)", id, username, hashedPassword, false)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to register"})
 		return
 	}
 	//캐릭터 정보 생성
-	createPlayerInfoInDB(userUUID)
-	var getplayerinfo GetPlayerInfo = GetCharacterInfo(userUUID, username)
+	createPlayerInfoInDB(id)
+	var getplayerinfo GetPlayerInfo = GetCharacterInfo(id, username)
+	fmt.Println(getplayerinfo)
 	// 성공적으로 저장되었을 때
 	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Registration successful", "playerinfo": getplayerinfo})
 
 }
 
-func createPlayerInfoInDB(userUUID string) {
+func createPlayerInfoInDB(id string) {
 	characterinfo := CharacterInfo{Level: 1, HP: 100, MP: 100, Money: 0}
 	skillinfo := SkillInfo{Attack1: 0, Attack2: 0, Attack3: 0, Attack4: 0}
 
@@ -95,7 +96,7 @@ func createPlayerInfoInDB(userUUID string) {
 		log.Fatal(err)
 	}
 	chaUUID := uuid.New().String()
-	_, err = db.DB.Exec("INSERT INTO playerinfo (id, character, skill, auth_id) VALUES ($1, $2, $3, $4)", chaUUID, characterInfojsonData, skillinfojsonData, userUUID)
+	_, err = db.DB.Exec("INSERT INTO character (character_id, hp, mp, money, level, attributes, skill_list, player_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", chaUUID, 100, 100, 100, 1, characterInfojsonData, skillinfojsonData, id)
 	if err != nil {
 		log.Fatal(err)
 	}

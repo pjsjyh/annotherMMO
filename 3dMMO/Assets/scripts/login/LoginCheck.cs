@@ -32,7 +32,7 @@ public class LoginCheck : MonoBehaviour
             string password = passwordInputField.text;
             if (id == "manager")
             {
-                ChaInfo managerInfo = new ChaInfo
+                ChaInfoOther managerInfo = new ChaInfoOther
                 {
                     _hp = 100,
                     _mp = 100,
@@ -40,7 +40,7 @@ public class LoginCheck : MonoBehaviour
                     _level = 99999
                 };
 
-                CharacterManager.Instance.InitializePlayer(managerInfo, "manager");
+                CharacterManager.Instance.InitializePlayer(managerInfo, "manager", 100, 100, 999999, 999);
                 sceneChange();
             }
             else

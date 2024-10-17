@@ -13,20 +13,20 @@ func Login(c *gin.Context) {
 	password := c.PostForm("password")
 
 	var storedPassword string
-	err := db.DB.QueryRow("SELECT userpassword FROM auth WHERE userid = $1", id).Scan(&storedPassword)
+	err := db.DB.QueryRow("SELECT password FROM auth WHERE player_id = $1", id).Scan(&storedPassword)
 	isValid := CheckPasswordHash(password, storedPassword)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid username or password"})
 		return
 	}
 	if isValid {
-		var getUserName, getID string
-		err := db.DB.QueryRow("SELECT id, username FROM auth WHERE userid = $1", id).Scan(&getID, &getUserName)
+		var getUserName string
+		err := db.DB.QueryRow("SELECT username FROM auth WHERE player_id = $1", id).Scan(&getUserName)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Account Error"})
 			return
 		}
-		var getplayerinfo GetPlayerInfo = GetCharacterInfo(getID, getUserName)
+		var getplayerinfo GetPlayerInfo = GetCharacterInfo(id, getUserName)
 		c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Login successful", "playerinfo": getplayerinfo})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Invalid username or password"})

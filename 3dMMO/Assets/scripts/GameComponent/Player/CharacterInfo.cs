@@ -11,6 +11,13 @@ namespace CharacterInfo
         public int _money;
         public int _level;
     };
+    public struct ChaInfoOther
+    {
+        public int _hp;
+        public int _mp;
+        public int _money;
+        public int _level;
+    }
     public struct SkillInfo
     {
         public int _attack1;
@@ -30,6 +37,7 @@ namespace CharacterInfo
     {
         private static CharacterManager instance;
         public ChaInfo myCharacter;
+        public ChaInfoOther myCharacterOther;
         public List<QuestInfo> questInfo;
         public string _username = "";
         // private 생성자: 외부에서 인스턴스 생성 불가능
@@ -49,12 +57,13 @@ namespace CharacterInfo
                 return instance;
             }
         }
-        public void InitializePlayer(ChaInfo playerInfo, string username)
+        public void InitializePlayer(ChaInfoOther playerInfo, string username, int hp, int mp, int money, int level)
         {
-            myCharacter._hp = playerInfo._hp;
-            myCharacter._mp = playerInfo._mp;
-            myCharacter._money = playerInfo._money;
-            myCharacter._level = playerInfo._level;
+            myCharacter._hp = hp;
+            myCharacter._mp = mp;
+            myCharacter._money = money;
+            myCharacter._level = level;
+            myCharacterOther = playerInfo;
             _username = username;
         }
         public void AddQuest(string id, string questType, int requiredAmount)

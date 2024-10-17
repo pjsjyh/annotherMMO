@@ -2,20 +2,26 @@ package handlers
 
 import (
 	"Server/db"
+	"fmt"
 )
 
 type GetPlayerInfo struct {
-	ID        string
-	Character string `json:"character"`
-	Skill     string `json:"skill"`
-	Auth_id   string
-	Username  string
+	ID         string
+	HP         string
+	MP         string
+	Money      string
+	Level      string
+	Attributes string `json:"character"`
+	SkillList  string `json:"skill"`
+	PlayerID   string
+	Username   string
 }
 
 func GetCharacterInfo(id, username string) GetPlayerInfo {
 	var playerInfo GetPlayerInfo
-	err := db.DB.QueryRow("SELECT id, character, skill, auth_id FROM playerinfo WHERE auth_id = $1", id).Scan(&playerInfo.ID, &playerInfo.Character, &playerInfo.Skill, &playerInfo.Auth_id)
+	err := db.DB.QueryRow("SELECT character_id, hp, mp, money,level, attributes, skill_list, player_id FROM character WHERE player_id = $1", id).Scan(&playerInfo.ID, &playerInfo.HP, &playerInfo.MP, &playerInfo.Money, &playerInfo.Level, &playerInfo.Attributes, &playerInfo.SkillList, &playerInfo.PlayerID)
 	if err != nil {
+		fmt.Println(playerInfo)
 		return playerInfo
 	}
 	playerInfo.Username = username
@@ -42,5 +48,6 @@ func GetCharacterInfo(id, username string) GetPlayerInfo {
 	// // 클라이언트로 JSON 응답 보내기
 	// fmt.Fprintln(w, string(jsonResponse))  // 'w'는 http.ResponseWriter
 	// playerInfo 구조체를 JSON으로 변환
+	fmt.Println(playerInfo)
 	return playerInfo
 }

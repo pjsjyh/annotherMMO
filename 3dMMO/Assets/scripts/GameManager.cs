@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     {
         if (CharacterManager.Instance._username == "")
         {
-            ChaInfo managerInfo = new ChaInfo
+            ChaInfoOther managerInfo = new ChaInfoOther
             {
                 _hp = 100,
                 _mp = 100,
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
                 _level = 99999
             };
 
-            CharacterManager.Instance.InitializePlayer(managerInfo, "manager");
+            CharacterManager.Instance.InitializePlayer(managerInfo, "manager", 100, 100, 999999, 999);
         }
     }
 
