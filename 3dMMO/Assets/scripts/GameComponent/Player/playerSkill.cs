@@ -20,7 +20,7 @@ public class playerSkill : MonoBehaviour
     public bool skill1cool, skill2cool, skill3cool, skill4cool = true;
     private float currentCoolTime, currentCoolTime4; //남은 쿨타임을 추적 할 변수
 
-    public bool canUseSkill = true, canUseSkill4=true; //스킬을 사용할 수 있는지 확인하는 변수
+    public bool canUseSkill = true, canUseSkill4 = true; //스킬을 사용할 수 있는지 확인하는 변수
     Player player;
     void start()
     {
@@ -30,7 +30,7 @@ public class playerSkill : MonoBehaviour
         skillFilter3.fillAmount = 0;
         skillFilter4.fillAmount = 0;
     }
-  
+
     public void UseSkill(int attacknum)
     {
 
@@ -67,7 +67,7 @@ public class playerSkill : MonoBehaviour
             }
         }
     }
-  
+
     void SkillCool(int attacknum)
     {
         switch (attacknum)
@@ -97,7 +97,7 @@ public class playerSkill : MonoBehaviour
                 canUseSkill4 = false;
                 break;
         }
-        
+
         StartCoroutine("Cooltime", attacknum);
 
 
@@ -110,7 +110,7 @@ public class playerSkill : MonoBehaviour
         switch (num)
         {
             case 1:
-                while(skillFilter1.fillAmount > 0)
+                while (skillFilter1.fillAmount > 0)
                 {
                     skillFilter1.fillAmount -= 1 * Time.smoothDeltaTime / coolTime;
 
@@ -142,7 +142,8 @@ public class playerSkill : MonoBehaviour
                 }
                 break;
         }
-        switch (num){
+        switch (num)
+        {
             case 1:
                 skill1cool = true;
                 canUseSkill = true;
@@ -160,7 +161,7 @@ public class playerSkill : MonoBehaviour
                 canUseSkill4 = true;
                 break;
         }
-         //스킬 쿨타임이 끝나면 스킬을 사용할 수 있는 상태로 바꿈
+        //스킬 쿨타임이 끝나면 스킬을 사용할 수 있는 상태로 바꿈
 
         yield break;
     }
@@ -222,5 +223,5 @@ public class playerSkill : MonoBehaviour
 
         yield break;
     }
-   
+
 }

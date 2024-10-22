@@ -10,12 +10,12 @@ namespace LayerLab
 
         public void OnEnable()
         {
-            for (int i = 0; i < otherPanels.Length; i++) otherPanels[i].SetActive(true);
+            //for (int i = 0; i < otherPanels.Length; i++) otherPanels[i].SetActive(true);
         }
 
         public void OnDisable()
         {
-            for (int i = 0; i < otherPanels.Length; i++) otherPanels[i].SetActive(false);
+            // for (int i = 0; i < otherPanels.Length; i++) otherPanels[i].SetActive(false);
         }
     }
 }

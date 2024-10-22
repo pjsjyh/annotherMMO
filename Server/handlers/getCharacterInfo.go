@@ -12,14 +12,13 @@ type GetPlayerInfo struct {
 	Money      string
 	Level      string
 	Attributes string `json:"character"`
-	SkillList  string `json:"skill"`
 	PlayerID   string
 	Username   string
 }
 
 func GetCharacterInfo(id, username string) GetPlayerInfo {
 	var playerInfo GetPlayerInfo
-	err := db.DB.QueryRow("SELECT character_id, hp, mp, money,level, attributes, skill_list, player_id FROM character WHERE player_id = $1", id).Scan(&playerInfo.ID, &playerInfo.HP, &playerInfo.MP, &playerInfo.Money, &playerInfo.Level, &playerInfo.Attributes, &playerInfo.SkillList, &playerInfo.PlayerID)
+	err := db.DB.QueryRow("SELECT character_id, hp, mp, money,level, attributes, player_id FROM character WHERE player_id = $1", id).Scan(&playerInfo.ID, &playerInfo.HP, &playerInfo.MP, &playerInfo.Money, &playerInfo.Level, &playerInfo.Attributes, &playerInfo.PlayerID)
 	if err != nil {
 		fmt.Println(playerInfo)
 		return playerInfo

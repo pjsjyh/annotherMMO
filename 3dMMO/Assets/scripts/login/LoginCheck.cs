@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro; // TextMeshPro 네임스페이스 추가
-using AuthManager;
 using UnityEngine.SceneManagement;
 using CharacterInfo;
+using LoginManager;
+using RegisterManager;
 public class LoginCheck : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -17,12 +18,7 @@ public class LoginCheck : MonoBehaviour
     public TextMeshProUGUI signupBtnText;
     public TextMeshProUGUI duplicateErrorText;
     public GameObject createAccountSuccesPanel;
-    private Auth authManager;
 
-    private void Awake()
-    {
-        authManager = new Auth(); // Auth 클래스의 인스턴스를 생성
-    }
     public async void signAccount()
     {
         duplicateErrorText.gameObject.SetActive(false);
@@ -45,7 +41,7 @@ public class LoginCheck : MonoBehaviour
             }
             else
             {
-                bool isSuccess = await authManager.GoLoginAccount(id, password, duplicateErrorText);
+                bool isSuccess = await Login.GoLoginAccount(id, password, duplicateErrorText);
                 if (isSuccess)
                 {
                     sceneChange();
@@ -62,7 +58,7 @@ public class LoginCheck : MonoBehaviour
                 string id = idInputField.text;
                 string password = passwordInputField.text;
                 string username = usernameInputField.text;
-                bool isSuccess = await authManager.CreateAccount(id, password, username, duplicateErrorText);
+                bool isSuccess = await Register.CreateAccount(id, password, username, duplicateErrorText);
                 if (isSuccess)
                 {
                     createAccountSuccesPanel.SetActive(true);

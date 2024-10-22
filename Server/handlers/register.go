@@ -85,18 +85,18 @@ func Register(c *gin.Context) {
 
 func createPlayerInfoInDB(id string) {
 	characterinfo := CharacterInfo{Level: 1, HP: 100, MP: 100, Money: 0}
-	skillinfo := SkillInfo{Attack1: 0, Attack2: 0, Attack3: 0, Attack4: 0}
+	//skillinfo := SkillInfo{Attack1: 0, Attack2: 0, Attack3: 0, Attack4: 0}
 
 	characterInfojsonData, err := json.Marshal(characterinfo)
 	if err != nil {
 		log.Fatal(err)
 	}
-	skillinfojsonData, err := json.Marshal(skillinfo)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// skillinfojsonData, err := json.Marshal(skillinfo)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	chaUUID := uuid.New().String()
-	_, err = db.DB.Exec("INSERT INTO character (character_id, hp, mp, money, level, attributes, skill_list, player_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", chaUUID, 100, 100, 100, 1, characterInfojsonData, skillinfojsonData, id)
+	_, err = db.DB.Exec("INSERT INTO character (character_id, hp, mp, money, level, attributes, player_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", chaUUID, 100, 100, 100, 1, characterInfojsonData, id)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -311,7 +311,7 @@ PrefabInstance:
         type: 3}
       propertyPath: fadeController
       value: 
-      objectReference: {fileID: 1194521047}
+      objectReference: {fileID: 0}
     - target: {fileID: 5404803830413777977, guid: caf5add109aecee1d93cfa4d7f2f3909,
         type: 3}
       propertyPath: createAccountSuccesPanel
@@ -453,20 +453,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2365094764835536201, guid: 7aa0458d97dd4bb358498d196bd8855b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7aa0458d97dd4bb358498d196bd8855b, type: 3}
---- !u!114 &1194521047 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2365094764835536201, guid: 7aa0458d97dd4bb358498d196bd8855b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1194521046}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1afa77a7044b60db78414b80dbbc71ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!225 &1194521048 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 2365094764835536200, guid: 7aa0458d97dd4bb358498d196bd8855b,
